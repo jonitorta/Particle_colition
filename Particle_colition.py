@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
-
+from matplotlib import cm
 
 #Here we define the particle class with.
 class Particle():
@@ -27,7 +27,7 @@ class Particle():
         
 #Here we create a random number of particles between 1,20 with random
 #mass, velocity and position within an interval.
-particles_number=np.random.randint(1,20)
+particles_number= 2 #np.random.randint(1,20)
 particles = [
     Particle(
         mass=np.random.uniform(0.1,10),
@@ -38,15 +38,37 @@ particles = [
 ]
 #Evolve the system # of times and save position of each particle in a list.
 times = 60
-position = [particles[i].move(times=times) for i in range(particles_number)]
+positions = [particles[i].move(times=times) for i in range(particles_number)]
+#Here we make individual list for x and y positions for each particle.
+x_position , y_position = [[] for i in range(particles_number)] , [[] for i in range(particles_number)]
+for i in range(particles_number):
+    for j in range(times):
+        x_position[i].append(positions[i][j][0])
+        y_position[i].append(positions[i][j][1])
+# initialize a figure, make a color range to color each point
 
 
 
 
 
+fig, ax = plt.subplots()
+ax.set_xlim([0,10])
+ax.set_ylim([0,10])
 
-def update(iterable,coords):
-    pass
+points = []
+for j, (col, mar) in enumerate(zip(["green", "blue"], ["o", "x"])):
+    newpoint, = ax.plot(x_position[j][0], y_position[j][0], color=col, marker=mar)
+    points.append(newpoint)
+
+def animation_frames(i):
+    for j in range(0,2):
+        points[j].set_data(x_position[j][i], y_position[j][i])        
+
+
+animation = FuncAnimation(fig, animation_frames, frames=len(x_position[0]), interval=30)
+    
+plt.show()
+
 
 
 
