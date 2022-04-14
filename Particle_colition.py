@@ -1,3 +1,5 @@
+from os import times
+from turtle import position
 import numpy as np
 from matplotlib.animation import FuncAnimation
 import matplotlib.pyplot as plt
@@ -7,22 +9,17 @@ from matplotlib import cm
 class Particle():
     #Properties of the particle with a mass and velocity we will implemet
     #acceleration in the future.
-    def __init__(self,mass=1,velocity=[1,1],position=[1,1]):
+    def __init__(self,mass=1,velocity=[1,1],position=[1,1],radius=1):
         self.mass = mass
         self.velocity = np.array(velocity)
         self.position = np.array(position)
+        self.radius = radius
     #This method computes particle position, frames argument describes how time
     #is discretized this helps to animate better, more frames make a smoother animation
-    #times argument is for how many times we call function move, if velocity is m/s then
-    #times * frames = seconds particle is moving.
-    def move(self,frames=60,times=1,count=1,values=None):
+    def move(self,frames=60,values=None):
         time_unit=1/frames
         if values is None : values = [self.position]
-        if count<=times:
-            self.position = time_unit*self.velocity+self.position
-            count = count + 1
-            values.append(self.position)
-            self.move(frames,times,count,values)
+        self.position = time_unit*self.velocity+self.position
         return values
 
 class Box():
@@ -30,6 +27,10 @@ class Box():
     def __init__(self,height=10,width=10):
         self.heigth = height
         self.width = width
+
+
+
+
         
 #Here we create a random number of particles between 1,20 with random
 #mass, velocity and position within an interval.
@@ -44,8 +45,23 @@ particles = [
     for i in range(particles_number)
 ]
 #Evolve the system # of times and save position of each particle in a list.
+
+
+def colition_detection(particles,box,times=200):
+    particle_number = len (particles)
+    positions = [[] for i in range(particle_number)]
+    for _ in range(times):
+        for i in range(particle_number):
+            positions[i].append(particles[i].position)
+            particles[i].move()
+    return positions
+
+
 times = 200
-positions = [particles[i].move(times=times) for i in range(particles_number)]
+positions = colition_detection(particles = particles,
+                            box = box,
+                            times = times)
+
 #Here we make individual list for x and y positions for each particle.
 x_position , y_position = [[] for i in range(particles_number)] , [[] for i in range(particles_number)]
 for i in range(particles_number):
