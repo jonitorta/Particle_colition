@@ -24,10 +24,17 @@ class Particle():
             values.append(self.position)
             self.move(frames,times,count,values)
         return values
+
+class Box():
+    #Box class we can define the heigth and width.
+    def __init__(self,height=10,width=10):
+        self.heigth = height
+        self.width = width
         
 #Here we create a random number of particles between 1,20 with random
 #mass, velocity and position within an interval.
 particles_number = np.random.randint(1,20)
+box=Box()
 particles = [
     Particle(
         mass=np.random.uniform(0.1,10),
@@ -45,15 +52,44 @@ for i in range(particles_number):
     for j in range(times):
         x_position[i].append(positions[i][j][0])
         y_position[i].append(positions[i][j][1])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # initialize a figure, make a color range to color each point
-
-
-
-
-
 fig, ax = plt.subplots()
-ax.set_xlim([-10,10])
-ax.set_ylim([-10,10])
+ax.set_xlim([ -box.width/2*1.10 , box.width/2*1.10 ])
+ax.set_ylim([ -box.heigth/2*1.10 , box.heigth/2*1.10 ])
+plt.plot([-box.width/2,box.width/2],[box.heigth/2,box.heigth/2],color="black")
+plt.plot([-box.width/2,box.width/2],[-box.heigth/2,-box.heigth/2],color="black")
+plt.plot([-box.width/2,-box.width/2],[-box.heigth/2,box.heigth/2],color="black")
+plt.plot([box.width/2,box.width/2],[-box.heigth/2,box.heigth/2],color="black")
 
 points = []
 color = cm.rainbow(np.linspace(0, 1, particles_number))
